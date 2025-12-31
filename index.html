@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Granum Core | The Runtime Environment</title>
+	<link rel="icon" href="/icon.svg" type="image/svg+xml">
+	<link rel="icon" href="/favicon.ico" sizes="any">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="manifest" href="/manifest.webmanifest">
+    <meta name="description" content="Central Hub for MadPunks, Granum, and Asfact.">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #e0e0e0;
+            --granum-green: #00ff41; /* System / Health */
+            --mad-red: #ff3333;      /* Spirit / Core */
+            --prism-blue: #00ccff;   /* Activity / Output */
+            --card-bg: #111;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            border: 1px solid var(--granum-green);
+            color: var(--granum-green);
+            font-size: 0.8rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        section { margin-bottom: 80px; }
+
+        h2 {
+            border-left: 4px solid #fff;
+            padding-left: 15px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Network Portal Grid */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .portal-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border: 1px solid #333;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .portal-card strong {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .portal-card p {
+            font-size: 0.9rem;
+            color: #aaa;
+            flex-grow: 1;
+        }
+
+        .portal-card .link-arrow {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            text-align: right;
+            opacity: 0.6;
+        }
+
+        /* MadPunks (Red) */
+        .portal-card.mad-red:hover {
+            border-color: var(--mad-red);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.2);
+            transform: translateY(-5px);
+        }
+        .portal-card.mad-red strong { color: var(--mad-red); }
+
+        /* Granum (Green) */
+        .portal-card.granum-green {
+            border-color: #333; /* Default state */
+        }
+        .portal-card.granum-green.active-node {
+            border-color: var(--granum-green);
+            background: #0a1a0a;
+            cursor: default;
+        }
+        .portal-card.granum-green strong { color: var(--granum-green); }
+
+        /* Asfact (Blue) */
+        .portal-card.prism-blue:hover {
+            border-color: var(--prism-blue);
+            box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
+            transform: translateY(-5px);
+        }
+        .portal-card.prism-blue strong { color: var(--prism-blue); }
+
+
+        /* Apps Section */
+        .app-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .app-item {
+            display: block;
+            text-decoration: none;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 25px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .app-item:hover {
+            border-color: var(--granum-green);
+            background: #111;
+            transform: translateX(5px);
+        }
+
+        .app-item h3 { margin: 0 0 10px 0; font-size: 1.3rem; color: #fff; }
+        .app-item .url { font-size: 0.8rem; color: #888; display: block; margin-bottom: 15px; font-family: monospace; }
+        .app-tag { font-size: 0.75rem; padding: 2px 8px; background: #333; border-radius: 4px; margin-right: 5px; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+            color: #666;
+            background-color: #080808;
+        }
+        
+        .footer-links { margin-bottom: 25px; }
+        .footer-links a { margin: 0 10px; color: #888; text-decoration: none; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; text-decoration: underline; }
+        
+        .footer-credits { line-height: 2.2; }
+        .footer-credits a {
+            color: #888;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        /* Command Colors */
+        .footer-credits a.mad-link:hover { color: var(--mad-red); }
+        .footer-credits a.granum-link:hover { color: var(--granum-green); }
+        .footer-credits a.asfact-link:hover { color: var(--prism-blue); }
+
+        .command-chain {
+            font-family: monospace;
+            color: #444;
+            display: block;
+            margin-top: 5px;
+            font-size: 0.75rem;
+        }
+
+        /* ▼▼▼ Talking Icon Animation & Spirit Section ▼▼▼ */
+        .spirit-section {
+            text-align: center;
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 1px dashed #333; /* 破線でシステムとの境界を表現 */
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin: 5px 0;
+            letter-spacing: 0.05em;
+        }
+
+        .talking-icon-container {
+            margin: 30px auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100px;
+        }
+        
+        .talking-icon {
+            width: 80px;
+            height: auto;
+            animation: talking-beat 0.3s infinite alternate;
+            will-change: transform;
+            /* アイコン自体が少し赤く光る */
+            filter: drop-shadow(0 0 8px rgba(255, 51, 51, 0.4)); 
+        }
+
+        @keyframes talking-beat {
+            0% { transform: scaleY(1) rotate(0deg); }
+            50% { transform: scaleY(0.85) rotate(-2deg); }
+            100% { transform: scaleY(1.05) rotate(2deg); }
+        }
+
+        .footer-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--mad-red); /* MadPunks Red */
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            text-shadow: 0 0 15px rgba(255, 51, 51, 0.3); /* Red Glow Effect */
+        }
+        /* ▲▲▲ Animation End ▲▲▲ */
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GRANUM.ONLINE</h1>
+        <div class="status-badge">SYSTEM STATUS: OPERATIONAL</div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Network Nodes</h2>
+            <div class="network-grid">
+                
+                <a href="https://madpunks.com" class="portal-card mad-red" target="_blank">
+                    <strong>MadPunks</strong>
+                    <p>Core Logic & Spirit.<br>迷わないための精神的指針。美学と衝動。</p>
+                    <div class="link-arrow">VISIT NODE -></div>
+                </a>
+
+                <div class="portal-card granum-green active-node">
+                    <strong>Granum</strong>
+                    <p>Runtime Environment.<br>日常を支えるインフラ。現在接続中のノード。</p>
+                    <div class="link-arrow">[ CURRENT LOCATION ]</div>
+                </div>
+
+                <a href="https://asfact.jp" class="portal-card prism-blue" target="_blank">
+                    <strong>Asfact (PrismZero)</strong>
+                    <p>Application Layer.<br>世界への出力と実装。株式会社Asfact。</p>
+                    <div class="link-arrow">VISIT NODE -></div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Hosted Applications</h2>
+            <p style="margin-bottom: 20px; color: #888;">Deployed on Granum Hybrid Cloud (Xserver).</p>
+            
+            <div class="app-list">
+                <a href="https://apps.granum.online/touki-diff/" class="app-item">
+                    <h3>Touki-Diff</h3>
+                    <span class="url">apps.granum.online/touki-diff</span>
+                    <p>登記情報のPDFを比較し、変更差分を視覚化するツール。法人の「Fact」の変遷を追跡する。</p>
+                    <div style="margin-top:10px;">
+                        <span class="app-tag">Utility</span><span class="app-tag">PDF Analysis</span>
+                    </div>
+                </a>
+
+                <a href="https://apps.granum.online/md2pdf/" class="app-item">
+                    <h3>MadPunks MD2PDF</h3>
+                    <span class="url">apps.granum.online/md2pdf</span>
+                    <p>Markdown文書を、MadPunksの精神を宿したPDFへ変換・出力するパブリッシングエンジン。</p>
+                    <div style="margin-top:10px;">
+                        <span class="app-tag">Converter</span><span class="app-tag">Design</span>
+                    </div>
+                </a>
+
+                <a href="https://apps.granum.online/svg2dist/" class="app-item">
+                    <h3>SVG2Dist</h3>
+                    <span class="url">apps.granum.online/svg2dist</span>
+                    <p>SVG一つからWebサイト用リソース（Favicon等）を一括生成。創造のための時間を確保する。</p>
+                    <div style="margin-top:10px;">
+                        <span class="app-tag">Generator</span><span class="app-tag">Automation</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="spirit-section">
+            <p class="subtitle">Stay Hungry, Stay Mad & Punk.</p>
+            <p class="subtitle">壊すべき(Punk)は自分たちの古い価値観。今日を真剣にMadに生きる。</p>
+            <div class="talking-icon-container">
+                <img src="https://madpunks.com/icon.svg" alt="Mad Icon" class="talking-icon">
+            </div>
+            <div class="footer-brand">MadPunks</div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="mailto:be@granum.online">Contact</a>
+            <span>/</span>
+            <a href="https://github.com/granum-core" target="_blank">GitHub</a>
+            <span>/</span>
+            <a href="https://asfact.jp/privacy-policy/" target="_blank">Privacy Policy</a>
+        </div>
+        
+        <p class="footer-credits">
+            Architected by <a href="https://madpunks.com" target="_blank" class="mad-link">MadPunks</a>.<br>
+            Hosted by <a href="https://granum.online" class="granum-link">Granum Core</a>.<br>
+            Operated by <a href="https://asfact.jp" target="_blank" class="asfact-link">Asfact Inc.</a> (Pre-PrismZero)<br>
+            
+            <span class="command-chain">
+                stay@madpunks.com / be@granum.online / full.force@asfact.jp
+            </span>
+            
+            <br>
+            © 2025 Granum Core.
+        </p>
+    </footer>
+
+</body>
+</html>
