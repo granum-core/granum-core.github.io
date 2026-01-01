@@ -3,13 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Granum Core | The Runtime Environment</title>
-	<link rel="icon" href="/icon.svg" type="image/svg+xml">
-	<link rel="icon" href="/favicon.ico" sizes="any">
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-	<link rel="manifest" href="/manifest.webmanifest">
-    <meta name="description" content="Central Hub for MadPunks, Granum, and Asfact.">
-	<meta name="google-site-verification" content="-WPCt5a2xBw_MJy3lIcTG2mpY80oZ3GsIU93PHo5zuM" />
+    <title>Granum Core | MadPunks Runtime Environment</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    
+    <meta name="description" content="Central Hub for MadPunks, Granum, and Asfact. 衝動(Mad)と論理(Fact)が交差するシステム基盤。Operated by Asfact Inc.">
+    <meta name="google-site-verification" content="-WPCt5a2xBw_MJy3lIcTG2mpY80oZ3GsIU93PHo5zuM" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Granum Core",
+      "url": "https://www.granum.online",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Asfact Inc.",
+        "alternateName": "株式会社Asfact",
+        "url": "https://asfact.jp",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.granum.online/icon.svg"
+        }
+      },
+      "brand": {
+        "@type": "Brand",
+        "name": "MadPunks",
+        "description": "Stay Hungry, Stay Mad. The creative spirit hosted on Granum."
+      }
+    }
+    </script>
     <style>
         :root {
             --bg-color: #050505;
@@ -184,7 +209,7 @@
         .footer-links a { margin: 0 10px; color: #888; text-decoration: none; transition: 0.3s; }
         .footer-links a:hover { color: #fff; text-decoration: underline; }
         
-        .footer-credits { line-height: 2.2; }
+        .footer-credits { line-height: 2.2; margin-bottom: 25px; }
         .footer-credits a {
             color: #888;
             text-decoration: none;
@@ -248,11 +273,42 @@
             font-weight: bold;
             color: var(--granum-green); /* Granum Green */
             letter-spacing: 4px;
-//            text-transform: uppercase;
+            /* text-transform: uppercase; */
             margin-top: 10px;
             text-shadow: 0 0 15px rgba(51, 255, 51, 0.3); /* Red Glow Effect */
         }
         /* ▲▲▲ Animation End ▲▲▲ */
+
+        /* ▼▼▼ Team Image Style ▼▼▼ */
+        .footer-team-img {
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+            filter: grayscale(100%) contrast(1.2);
+            opacity: 0.7;
+            transition: all 0.4s ease;
+            border: 1px solid #333;
+        }
+        .footer-team-img:hover {
+            filter: grayscale(0%) contrast(1);
+            opacity: 1;
+            border-color: var(--mad-red);
+        }
+
+        /* ▼▼▼ Trademark Notice Box ▼▼▼ */
+        .tm-notice {
+            border: 1px solid #222;
+            background: #111;
+            padding: 15px;
+            font-size: 0.7rem;
+            color: #555;
+            margin: 0 auto;
+            font-family: var(--font-sans);
+            max-width: 800px;
+            line-height: 1.6;
+        }
 
     </style>
 </head>
@@ -319,7 +375,16 @@
                         <span class="app-tag">Generator</span><span class="app-tag">Automation</span>
                     </div>
                 </a>
-            </div>
+
+                <a href="https://apps.granum.online/svg-preview/" class="app-item">
+                    <h3>SVG Preview</h3>
+                    <span class="url">apps.granum.online/svg-preview</span>
+                    <p>SVG配色パターンをリアルタイム検証。実装前の試行錯誤を高速化し、最適な『色』を確定させる。</p>
+                    <div style="margin-top:10px;">
+                        <span class="app-tag">Design Tool</span><span class="app-tag">Simulation</span>
+                    </div>
+                </a>
+                </div>
         </section>
 
         <section class="spirit-section">
@@ -358,4 +423,3 @@
 
 </body>
 </html>
-
